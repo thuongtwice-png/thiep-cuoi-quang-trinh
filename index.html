@@ -4,33 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đức Quảng & Mai Trinh - Wedding Invitation</title>
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Phosphor Icons -->
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
-
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: {
-                        cursive: ['"Great Vibes"', 'cursive'],
-                        serif: ['"Playfair Display"', 'serif'],
-                        sans: ['"Montserrat"', 'sans-serif'],
+                    colors: {
+                        stone: {
+                            50: '#fafaf9', 100: '#f5f5f4', 200: '#e7e5e4', 300: '#d6d3d1',
+                            400: '#a8a29e', 500: '#78716c', 600: '#57534e', 700: '#44403c',
+                            800: '#292524', 900: '#1c1917',
+                        },
+                        rose: {
+                            50: '#fff1f2', 100: '#ffe4e6', 200: '#fecdd3', 300: '#fda4af',
+                            400: '#fb7185', 500: '#f43f5e', 600: '#e11d48', 700: '#be123c',
+                            800: '#9f1239', 900: '#881337',
+                        }
                     }
                 }
             }
         }
     </script>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
 
-    <!-- Custom CSS -->
     <style>
+        .font-cursive { font-family: 'Great Vibes', cursive; }
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .font-sans { font-family: 'Montserrat', sans-serif; }
+        
         .bg-hero {
             background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)), url('https://i.ibb.co/7NSCqfv0/z7826602305201-d63b43e4e826a19f2d64c3e263b01807.jpg');
             background-size: cover;
@@ -43,7 +45,6 @@
             transform: translateY(30px);
             transition: all 0.8s ease-out;
         }
-        
         .reveal.active {
             opacity: 1;
             transform: translateY(0);
@@ -54,7 +55,6 @@
             20% { opacity: 0.8; }
             100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
         }
-
         .falling-heart {
             position: fixed;
             top: -10%;
@@ -63,30 +63,25 @@
             animation: heartFall linear infinite;
         }
 
-        .animate-spin-slow { 
-            animation: spin 8s linear infinite; 
-        }
+        .animate-spin-slow { animation: spin 8s linear infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         
-        @keyframes spin { 
-            from { transform: rotate(0deg); } 
-            to { transform: rotate(360deg); } 
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
         }
 
-        html {
-            scroll-behavior: smooth;
-        }
+        /* Hide elements initially */
+        #main-content { display: none; }
+        #toast { opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+        #toast.show { opacity: 1; }
     </style>
 </head>
 <body class="font-sans text-stone-800 bg-[#fdfbf7] min-h-screen relative overflow-x-hidden">
 
-    <audio id="bg-audio" loop src="https://res.cloudinary.com/dngsn0q6b/video/upload/v1778851957/Beautiful_In_White_s7l66b.mp3" preload="auto"></audio>
+    <audio id="bg-music" loop src="https://res.cloudinary.com/dngsn0q6b/video/upload/v1778851957/Beautiful_In_White_s7l66b.mp3" preload="auto"></audio>
 
-    <div id="toast" class="fixed top-10 left-1/2 -translate-x-1/2 bg-stone-800 text-white px-6 py-2 rounded-full text-sm z-[100] shadow-xl transition-all duration-300 opacity-0 translate-y-[-20px] pointer-events-none flex items-center">
-        <i class="ph-fill ph-check-circle mr-2 text-green-400 text-lg"></i>
-        <span id="toast-message">Đã sao chép!</span>
-    </div>
-
-    <div id="cover-page" class="h-screen w-full flex items-center justify-center bg-[#fdfbf7] p-4 absolute inset-0 z-50 transition-opacity duration-1000">
+    <div id="cover-screen" class="h-screen w-full flex items-center justify-center bg-[#fdfbf7] p-4">
         <div class="max-w-md w-full bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-rose-100 flex flex-col items-center text-center p-8">
             <div class="w-48 h-48 rounded-full overflow-hidden mb-6 border-4 border-rose-50 shadow-inner">
                 <img src="https://i.ibb.co/Zzrg3wcH/z7828023789671-ba1faf6c70735218afbd9f90089c35e8.jpg" class="w-full h-full object-cover" alt="Bìa" />
@@ -94,16 +89,15 @@
             <p class="font-serif text-stone-400 uppercase tracking-[0.3em] text-xs mb-2">Đám Cưới Của</p>
             <h2 class="font-cursive text-4xl text-rose-800 mb-6">Đức Quảng & Mai Trinh</h2>
             <button id="open-btn" class="bg-rose-800 text-white px-10 py-4 rounded-full font-bold shadow-lg hover:scale-105 active:scale-95 transition-all flex items-center gap-2 group">
-                MỞ THIỆP MỜI <i class="ph-fill ph-heart text-xl group-hover:animate-ping"></i>
+                MỞ THIỆP MỜI <i data-lucide="heart" class="w-[18px] h-[18px] fill-white group-hover:animate-ping"></i>
             </button>
         </div>
     </div>
 
-    <div id="main-content" class="hidden">
-        <!-- Container cho tim rơi -->
+    <div id="main-content">
+        <!-- Heart Container -->
         <div id="hearts-container"></div>
 
-        <!-- Section 1: Hero -->
         <section class="bg-hero h-screen w-full flex flex-col justify-center items-center text-white relative">
             <div class="text-center z-10 px-4">
                 <p class="tracking-[0.3em] uppercase text-sm mb-4 font-serif">Save The Date</p>
@@ -113,12 +107,9 @@
                     <p class="text-xs mt-1 italic text-rose-200">(Tức ngày 11 tháng 04 năm Bính Ngọ)</p>
                 </div>
             </div>
-            <div class="absolute bottom-10 animate-bounce">
-                <i class="ph-bold ph-caret-down text-3xl text-white/70"></i>
-            </div>
+            <div class="absolute bottom-10 animate-bounce"><i data-lucide="chevron-down" class="w-8 h-8 text-white/70"></i></div>
         </section>
 
-        <!-- Section 2: Couple -->
         <section class="py-24 px-4 max-w-5xl mx-auto text-center reveal">
             <h2 class="font-cursive text-5xl text-rose-800 mb-16">Chú rể & Cô dâu</h2>
             <div class="flex flex-col md:flex-row justify-center items-center gap-12">
@@ -130,7 +121,7 @@
                     <p class="text-stone-500 text-sm">Con ông: Ngô Đức Hùng - Con bà: Võ Thị Hồng</p>
                     <p class="text-stone-400 text-[11px] mt-1 italic">Địa chỉ: TTDP Nam Hải - phường Nghi Sơn</p>
                 </div>
-                <i class="ph-fill ph-heart text-4xl text-rose-400 animate-pulse hidden md:block"></i>
+                <i data-lucide="heart" class="w-10 h-10 text-rose-400 animate-pulse fill-current hidden md:block"></i>
                 <div class="flex flex-col items-center">
                     <div class="w-56 h-56 rounded-t-full overflow-hidden mb-6 border-4 border-rose-100 shadow-xl">
                         <img src="https://i.ibb.co/yBdKrp9k/z7826602334651-ecd19ed85f32ec754923a8a95b6b15ce.jpg" alt="Cô dâu" class="w-full h-full object-cover" />
@@ -142,74 +133,45 @@
             </div>
         </section>
 
-        <!-- Section 3: Countdown -->
         <section class="bg-rose-50 py-20 px-4 reveal">
             <div class="max-w-4xl mx-auto text-center">
                 <h2 class="font-serif text-3xl mb-10 text-rose-900 italic">Ngày trọng đại đang đến!</h2>
-                <div class="flex justify-center gap-4 mb-16">
-                    <div class="bg-white w-20 h-20 md:w-28 md:h-28 rounded-2xl flex flex-col items-center justify-center shadow-sm border border-rose-100">
-                        <span id="days" class="text-2xl md:text-4xl font-serif text-rose-800">00</span>
-                        <span class="text-[10px] uppercase text-stone-400">Ngày</span>
-                    </div>
-                    <div class="bg-white w-20 h-20 md:w-28 md:h-28 rounded-2xl flex flex-col items-center justify-center shadow-sm border border-rose-100">
-                        <span id="hours" class="text-2xl md:text-4xl font-serif text-rose-800">00</span>
-                        <span class="text-[10px] uppercase text-stone-400">Giờ</span>
-                    </div>
-                    <div class="bg-white w-20 h-20 md:w-28 md:h-28 rounded-2xl flex flex-col items-center justify-center shadow-sm border border-rose-100">
-                        <span id="minutes" class="text-2xl md:text-4xl font-serif text-rose-800">00</span>
-                        <span class="text-[10px] uppercase text-stone-400">Phút</span>
-                    </div>
-                    <div class="bg-white w-20 h-20 md:w-28 md:h-28 rounded-2xl flex flex-col items-center justify-center shadow-sm border border-rose-100">
-                        <span id="seconds" class="text-2xl md:text-4xl font-serif text-rose-800">00</span>
-                        <span class="text-[10px] uppercase text-stone-400">Giây</span>
-                    </div>
+                <div class="flex justify-center gap-4 mb-16" id="countdown-container">
+                    <!-- Countdown items will be injected here via JS -->
                 </div>
-                
-                <!-- Calendar -->
+                <!-- Calendar UI -->
                 <div class="max-w-xs mx-auto bg-white p-6 rounded-2xl shadow-md border border-rose-100">
                     <div class="text-center mb-4"><span class="font-serif text-xl text-rose-900 uppercase">Tháng 5 / 2026</span></div>
                     <div class="grid grid-cols-7 gap-1 text-center text-xs" id="calendar-grid">
-                        <div class="text-stone-400 font-bold">T2</div>
-                        <div class="text-stone-400 font-bold">T3</div>
-                        <div class="text-stone-400 font-bold">T4</div>
-                        <div class="text-stone-400 font-bold">T5</div>
-                        <div class="text-stone-400 font-bold">T6</div>
-                        <div class="text-stone-400 font-bold">T7</div>
-                        <div class="text-rose-400 font-bold">CN</div>
-                        <!-- Empty slots for days before 1st -->
-                        <div></div><div></div><div></div><div></div>
-                        <!-- Days will be injected by JS -->
+                        <div class="text-stone-400 font-bold">T2</div><div class="text-stone-400 font-bold">T3</div><div class="text-stone-400 font-bold">T4</div><div class="text-stone-400 font-bold">T5</div><div class="text-stone-400 font-bold">T6</div><div class="text-stone-400 font-bold">T7</div><div class="text-rose-400 font-bold">CN</div>
+                        <!-- Calendar days will be injected via JS -->
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Section 4: Events -->
         <section class="py-24 px-4 max-w-6xl mx-auto reveal">
             <h2 class="font-cursive text-5xl text-rose-800 mb-16 text-center">Sự kiện lễ cưới</h2>
             <div class="grid md:grid-cols-2 gap-10">
-                <!-- Nhà Gái -->
                 <div class="bg-white p-10 shadow-lg rounded-[2rem] border-l-8 border-rose-300">
                     <h3 class="font-serif text-2xl mb-4 text-rose-900">Lễ Nạp Tài</h3>
-                    <p class="flex items-center gap-2 mb-1 text-stone-600"><i class="ph-fill ph-calendar-blank text-lg"></i> 25/05/2026</p>
+                    <p class="flex items-center gap-2 mb-1 text-stone-600"><i data-lucide="calendar" class="w-[18px] h-[18px]"></i> 25/05/2026</p>
                     <p class="text-xs italic text-rose-500 mb-2 ml-7">(Tức 09/04 Âm lịch)</p>
-                    <p class="flex items-center gap-2 mb-2 text-stone-600"><i class="ph-fill ph-clock text-lg"></i> 14:00 PM</p>
-                    <p class="flex items-center gap-2 mb-6 text-stone-600"><i class="ph-fill ph-map-pin text-lg"></i> Nhà Gái - phường Nghi Sơn</p>
+                    <p class="flex items-center gap-2 mb-2 text-stone-600"><i data-lucide="clock" class="w-[18px] h-[18px]"></i> 14:00 PM</p>
+                    <p class="flex items-center gap-2 mb-6 text-stone-600"><i data-lucide="map-pin" class="w-[18px] h-[18px]"></i> Nhà Gái - phường Nghi Sơn</p>
                     <a href="https://maps.app.goo.gl/r39hX2yLy1YgLnjC8" target="_blank" rel="noreferrer" class="text-rose-600 font-bold underline">Xem bản đồ</a>
                 </div>
-                <!-- Nhà Trai -->
                 <div class="bg-white p-10 shadow-lg rounded-[2rem] border-l-8 border-rose-800">
                     <h3 class="font-serif text-2xl mb-4 text-rose-900">Lễ Đón Dâu</h3>
-                    <p class="flex items-center gap-2 mb-1 text-stone-600"><i class="ph-fill ph-calendar-blank text-lg"></i> 27/05/2026</p>
+                    <p class="flex items-center gap-2 mb-1 text-stone-600"><i data-lucide="calendar" class="w-[18px] h-[18px]"></i> 27/05/2026</p>
                     <p class="text-xs italic text-rose-500 mb-2 ml-7">(Tức 11/04 Âm lịch)</p>
-                    <p class="flex items-center gap-2 mb-2 text-stone-600"><i class="ph-fill ph-clock text-lg"></i> 09:15 AM</p>
-                    <p class="flex items-center gap-2 mb-6 text-stone-600"><i class="ph-fill ph-map-pin text-lg"></i> Nhà Trai - phường Nghi Sơn</p>
+                    <p class="flex items-center gap-2 mb-2 text-stone-600"><i data-lucide="clock" class="w-[18px] h-[18px]"></i> 09:15 AM</p>
+                    <p class="flex items-center gap-2 mb-6 text-stone-600"><i data-lucide="map-pin" class="w-[18px] h-[18px]"></i> Nhà Trai - phường Nghi Sơn</p>
                     <a href="https://maps.app.goo.gl/r39hX2yLy1YgLnjC8" target="_blank" rel="noreferrer" class="text-rose-800 font-bold underline">Xem bản đồ</a>
                 </div>
             </div>
         </section>
 
-        <!-- Section 5: Gallery -->
         <section class="bg-stone-50 py-24 px-4 reveal">
             <div class="max-w-6xl mx-auto text-center">
                 <h2 class="font-cursive text-5xl text-rose-800 mb-12">Album Hình Cưới</h2>
@@ -223,13 +185,12 @@
             </div>
         </section>
 
-        <!-- Section 6: RSVP -->
         <section class="py-24 px-4 max-w-3xl mx-auto text-center reveal">
             <h2 class="font-cursive text-5xl text-rose-800 mb-6">Xác Nhận Tham Dự</h2>
             <p class="text-stone-500 mb-10 font-serif italic">Bạn sẽ đến chung vui cùng chúng mình chứ?</p>
             
             <div id="rsvp-success" class="hidden bg-green-50 p-8 rounded-3xl border border-green-100 flex-col items-center animate-bounce">
-                <i class="ph-fill ph-check-circle text-5xl text-green-500 mb-4"></i>
+                <i data-lucide="check-circle" class="w-12 h-12 text-green-500 mb-4"></i>
                 <h4 class="text-green-800 font-bold text-xl">Cảm ơn bạn đã xác nhận!</h4>
                 <p class="text-green-700 text-sm mt-2">Hẹn gặp bạn tại buổi lễ nhé!</p>
             </div>
@@ -251,34 +212,25 @@
                     <textarea id="rsvp-message" class="w-full px-5 py-3 rounded-2xl border border-stone-200 focus:ring-2 focus:ring-rose-400 outline-none" rows="3" placeholder="Gửi lời chúc tốt đẹp nhất..."></textarea>
                 </div>
                 <button type="submit" id="submit-btn" class="w-full bg-rose-800 hover:bg-rose-900 text-white font-bold py-4 rounded-full shadow-lg transition-all flex items-center justify-center gap-2">
-                    <span id="submit-text">GỬI XÁC NHẬN</span> <i class="ph-fill ph-paper-plane-right text-lg"></i>
+                    <span id="btn-text">GỬI XÁC NHẬN</span> <i data-lucide="send" class="w-[18px] h-[18px]"></i>
                 </button>
             </form>
         </section>
 
-        <!-- Section 7: Gifts -->
         <section class="bg-rose-50 py-24 px-4 reveal">
             <div class="max-w-4xl mx-auto text-center">
                 <h2 class="font-cursive text-5xl text-rose-800 mb-12">Hộp Quà Cưới</h2>
                 <div class="flex flex-col md:flex-row gap-8">
-                    <!-- Chú rể -->
                     <div class="bg-white p-8 rounded-3xl shadow-sm flex-1">
                         <h4 class="font-serif text-xl mb-4">Chú Rể</h4>
                         <div id="groom-stk-container">
-                            <button id="show-groom-stk" class="bg-rose-800 text-white px-6 py-2 rounded-full text-sm">Hiện STK</button>
-                        </div>
-                        <div id="groom-stk-info" class="hidden font-mono font-bold text-lg cursor-pointer" onclick="copyText('105873530265')">
-                            105873530265 <br/><span class="text-[10px] text-rose-400 font-sans">VietinBank - Click để copy</span>
+                            <button onclick="showSTK('groom')" class="bg-rose-800 text-white px-6 py-2 rounded-full text-sm">Hiện STK</button>
                         </div>
                     </div>
-                    <!-- Cô dâu -->
                     <div class="bg-white p-8 rounded-3xl shadow-sm flex-1">
                         <h4 class="font-serif text-xl mb-4">Cô Dâu</h4>
                         <div id="bride-stk-container">
-                            <button id="show-bride-stk" class="bg-rose-800 text-white px-6 py-2 rounded-full text-sm">Hiện STK</button>
-                        </div>
-                        <div id="bride-stk-info" class="hidden font-mono font-bold text-lg cursor-pointer" onclick="copyText('080703080703')">
-                            080703080703 <br/><span class="text-[10px] text-rose-400 font-sans">MB Bank - Click để copy</span>
+                            <button onclick="showSTK('bride')" class="bg-rose-800 text-white px-6 py-2 rounded-full text-sm">Hiện STK</button>
                         </div>
                     </div>
                 </div>
@@ -290,30 +242,25 @@
             <p class="text-[10px] tracking-[0.5em] mt-4 uppercase">Trân trọng cảm ơn quý khách</p>
         </footer>
 
-        <!-- Nút Trôi (Floating Buttons) -->
+        <!-- Fixed Controls -->
         <div class="fixed bottom-6 right-6 flex flex-col gap-4 z-50">
-            <button id="auto-scroll-btn" class="w-12 h-12 bg-white text-rose-400 rounded-full flex items-center justify-center shadow-lg hover:bg-rose-50 transition-colors">
-                <i id="scroll-icon" class="ph-fill ph-play text-xl"></i>
+            <button id="scroll-btn" class="w-12 h-12 bg-white text-rose-400 rounded-full flex items-center justify-center shadow-lg hover:bg-rose-50">
+                <i data-lucide="play" id="scroll-icon" class="w-5 h-5"></i>
             </button>
-            <button id="audio-btn" class="w-12 h-12 bg-rose-400 text-white rounded-full flex items-center justify-center shadow-lg transition-transform">
-                <i id="audio-icon" class="ph-fill ph-speaker-slash text-xl"></i>
+            <button id="audio-btn" class="w-12 h-12 bg-rose-400 text-white rounded-full flex items-center justify-center shadow-lg">
+                <i data-lucide="volume-x" id="audio-icon" class="w-5 h-5"></i>
             </button>
         </div>
     </div>
 
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed top-10 left-1/2 -translate-x-1/2 bg-stone-800 text-white px-6 py-2 rounded-full text-sm z-[100] shadow-xl flex items-center">
+        <i data-lucide="check-circle" class="mr-2 text-green-400 w-4 h-4"></i> <span id="toast-msg">Đã sao chép!</span>
+    </div>
+
     <script>
-        // DOM Elements
-        const coverPage = document.getElementById('cover-page');
-        const mainContent = document.getElementById('main-content');
-        const openBtn = document.getElementById('open-btn');
-        const audio = document.getElementById('bg-audio');
-        const audioBtn = document.getElementById('audio-btn');
-        const audioIcon = document.getElementById('audio-icon');
-        const autoScrollBtn = document.getElementById('auto-scroll-btn');
-        const scrollIcon = document.getElementById('scroll-icon');
-        const heartsContainer = document.getElementById('hearts-container');
-        const toast = document.getElementById('toast');
-        const toastMessage = document.getElementById('toast-message');
+        // Initialize Icons
+        lucide.createIcons();
 
         // State Variables
         let isOpened = false;
@@ -321,198 +268,192 @@
         let isPlaying = false;
         let scrollInterval;
         let heartInterval;
+        const weddingDate = new Date("2026-05-27T09:15:00");
 
-        // --- Render Calendar ---
+        // Elements
+        const audioEl = document.getElementById('bg-music');
+        const coverScreen = document.getElementById('cover-screen');
+        const mainContent = document.getElementById('main-content');
+        const openBtn = document.getElementById('open-btn');
+        const scrollBtn = document.getElementById('scroll-btn');
+        const audioBtn = document.getElementById('audio-btn');
+        const scrollIcon = document.getElementById('scroll-icon');
+        const audioIcon = document.getElementById('audio-icon');
+        const toast = document.getElementById('toast');
+        const toastMsg = document.getElementById('toast-msg');
+
+        // Render Calendar
         const calendarGrid = document.getElementById('calendar-grid');
-        for (let i = 1; i <= 31; i++) {
-            const div = document.createElement('div');
-            div.className = "p-2";
-            if (i === 27) {
-                div.className += " bg-rose-800 text-white rounded-full";
-            } else if (i === 25) {
-                div.className += " bg-rose-100 rounded-full";
+        let calendarHTML = '';
+        for(let i=0; i<4; i++) calendarHTML += '<div></div>'; // Padding
+        for(let i=1; i<=31; i++) {
+            let classes = "p-2";
+            if(i === 27) classes += " bg-rose-800 text-white rounded-full";
+            else if(i === 25) classes += " bg-rose-100 rounded-full";
+            calendarHTML += `<div class="${classes}">${i}</div>`;
+        }
+        calendarGrid.innerHTML += calendarHTML;
+
+        // Countdown Logic
+        function updateCountdown() {
+            const difference = +weddingDate - +new Date();
+            if (difference > 0) {
+                const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+                const minutes = Math.floor((difference / 1000 / 60) % 60);
+                const seconds = Math.floor((difference / 1000) % 60);
+                
+                const data = { 'Ngày': days, 'Giờ': hours, 'Phút': minutes, 'Giây': seconds };
+                let html = '';
+                for(const [unit, value] of Object.entries(data)) {
+                    html += `
+                        <div class="bg-white w-20 h-20 md:w-28 md:h-28 rounded-2xl flex flex-col items-center justify-center shadow-sm border border-rose-100">
+                            <span class="text-2xl md:text-4xl font-serif text-rose-800">${value}</span>
+                            <span class="text-[10px] uppercase text-stone-400">${unit}</span>
+                        </div>
+                    `;
+                }
+                document.getElementById('countdown-container').innerHTML = html;
             }
-            div.innerText = i;
-            calendarGrid.appendChild(div);
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // Heart Animation
+        function createHeart() {
+            if(!isOpened) return;
+            const container = document.getElementById('hearts-container');
+            const heart = document.createElement('div');
+            heart.className = 'falling-heart';
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.animationDuration = Math.random() * 3 + 4 + 's';
+            
+            // Create SVG heart
+            heart.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="${Math.random() * 15 + 10}" height="${Math.random() * 15 + 10}" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-rose-300" style="opacity:${Math.random() * 0.5 + 0.3}"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>`;
+            
+            container.appendChild(heart);
+            setTimeout(() => { heart.remove(); }, 8000); // Remove after animation
         }
 
-        // --- Countdown Timer ---
-        const weddingDate = new Date("2026-05-27T09:15:00").getTime();
-        setInterval(() => {
-            const now = new Date().getTime();
-            const distance = weddingDate - now;
-
-            if (distance > 0) {
-                document.getElementById("days").innerText = Math.floor(distance / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
-                document.getElementById("hours").innerText = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
-                document.getElementById("minutes").innerText = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
-                document.getElementById("seconds").innerText = Math.floor((distance % (1000 * 60)) / 1000).toString().padStart(2, '0');
-            }
-        }, 1000);
-
-        // --- Open Invitation Handle ---
+        // Open Invitation
         openBtn.addEventListener('click', () => {
-            isOpened = true;
-            
-            // Hide cover & Show main content
-            coverPage.style.opacity = '0';
-            setTimeout(() => {
-                coverPage.style.display = 'none';
-                mainContent.classList.remove('hidden');
-                initScrollObserver();
-            }, 800);
-
-            // Play Audio
-            audio.play().then(() => {
+            audioEl.play().then(() => {
                 isPlaying = true;
-                updateAudioUI();
-            }).catch(e => console.log("Audio play failed:", e));
+                updateAudioIcon();
+                audioBtn.classList.add('animate-spin-slow');
+            }).catch(e => console.error(e));
 
-            // Start falling hearts
-            startHearts();
+            isOpened = true;
+            coverScreen.style.display = 'none';
+            mainContent.style.display = 'block';
+            
+            // Re-initialize icons for newly shown content
+            lucide.createIcons();
+            
+            // Start Hearts
+            heartInterval = setInterval(createHeart, 800);
 
-            // Start Auto-scroll after delay
+            // Initialize Intersection Observer
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) entry.target.classList.add('active');
+                });
+            }, { threshold: 0.15 });
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+            // Start Auto Scroll after delay
             setTimeout(() => {
-                toggleAutoScroll(true);
+                toggleAutoScroll();
             }, 2500);
         });
 
-        // --- Audio Control ---
-        function updateAudioUI() {
-            if (isPlaying) {
-                audioIcon.classList.replace('ph-speaker-slash', 'ph-speaker-high');
-                audioBtn.classList.add('animate-spin-slow');
-            } else {
-                audioIcon.classList.replace('ph-speaker-high', 'ph-speaker-slash');
-                audioBtn.classList.remove('animate-spin-slow');
-            }
-        }
-
-        audioBtn.addEventListener('click', () => {
-            if (isPlaying) {
-                audio.pause();
-            } else {
-                audio.play();
-            }
-            isPlaying = !isPlaying;
-            updateAudioUI();
-        });
-
-        // --- Auto Scroll Control ---
-        function toggleAutoScroll(forceState) {
-            isAutoScrolling = forceState !== undefined ? forceState : !isAutoScrolling;
+        // Auto Scroll Logic
+        function toggleAutoScroll() {
+            isAutoScrolling = !isAutoScrolling;
+            updateScrollIcon();
             
             if (isAutoScrolling) {
-                scrollIcon.classList.replace('ph-play', 'ph-pause');
                 scrollInterval = setInterval(() => {
                     window.scrollBy({ top: 1, behavior: 'auto' });
-                    // Stop if reached bottom
                     if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 2) {
-                        toggleAutoScroll(false);
+                        toggleAutoScroll(); // Stop when reaching bottom
                     }
                 }, 30);
             } else {
-                scrollIcon.classList.replace('ph-pause', 'ph-play');
                 clearInterval(scrollInterval);
             }
         }
+        scrollBtn.addEventListener('click', toggleAutoScroll);
 
-        autoScrollBtn.addEventListener('click', () => toggleAutoScroll());
-
-        // Stop auto scroll when user manually interacts
-        window.addEventListener('wheel', () => { if(isAutoScrolling) toggleAutoScroll(false); }, {passive: true});
-        window.addEventListener('touchstart', () => { if(isAutoScrolling) toggleAutoScroll(false); }, {passive: true});
-
-        // --- Falling Hearts Animation ---
-        function startHearts() {
-            heartInterval = setInterval(() => {
-                const heart = document.createElement('div');
-                heart.classList.add('falling-heart');
-                heart.style.left = Math.random() * 100 + 'vw';
-                
-                // Random duration between 4s and 7s
-                const duration = Math.random() * 3 + 4;
-                heart.style.animationDuration = duration + 's';
-                
-                // Random opacity
-                const opacity = Math.random() * 0.5 + 0.3;
-                
-                // Random size
-                const size = Math.random() * 15 + 10;
-
-                heart.innerHTML = <i class="ph-fill ph-heart text-rose-300" style="opacity: ${opacity}; font-size: ${size}px;"></i>;
-                
-                heartsContainer.appendChild(heart);
-
-                // Remove heart after animation completes to clean up DOM
-                setTimeout(() => {
-                    heart.remove();
-                }, duration * 1000);
-            }, 800);
+        function updateScrollIcon() {
+            scrollIcon.setAttribute('data-lucide', isAutoScrolling ? 'pause' : 'play');
+            lucide.createIcons();
         }
 
-        // --- Intersection Observer for Animations ---
-        function initScrollObserver() {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('active');
-                    }
-                });
-            }, { threshold: 0.15 });
+        // Audio Logic
+        audioBtn.addEventListener('click', () => {
+            if (isPlaying) {
+                audioEl.pause();
+                audioBtn.classList.remove('animate-spin-slow');
+            } else {
+                audioEl.play();
+                audioBtn.classList.add('animate-spin-slow');
+            }
+            isPlaying = !isPlaying;
+            updateAudioIcon();
+        });
 
-            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        function updateAudioIcon() {
+            audioIcon.setAttribute('data-lucide', isPlaying ? 'volume-2' : 'volume-x');
+            lucide.createIcons();
         }
 
-        // --- Show STK & Copy Logic ---
-        document.getElementById('show-groom-stk').addEventListener('click', (e) => {
-            document.getElementById('groom-stk-container').classList.add('hidden');
-            document.getElementById('groom-stk-info').classList.remove('hidden');
-            document.getElementById('groom-stk-info').classList.add('block');
-        });
+        // Copy STK
+        function showToast(text) {
+            toastMsg.innerText = text;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
 
-        document.getElementById('show-bride-stk').addEventListener('click', (e) => {
-            document.getElementById('bride-stk-container').classList.add('hidden');
-            document.getElementById('bride-stk-info').classList.remove('hidden');
-            document.getElementById('bride-stk-info').classList.add('block');
-        });
+        function copySTK(number) {
+            // Fallback for document.execCommand since navigator.clipboard might not work in iframes
+            const textArea = document.createElement("textarea");
+            textArea.value = number;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showToast('Đã sao chép số tài khoản!');
+            } catch (err) {
+                console.error('Failed to copy', err);
+            }
+            document.body.removeChild(textArea);
+        }
 
-        window.copyText = function(text) {
-            // Create a temporary textarea element to use exact copy command for wider compatibility
-            const el = document.createElement('textarea');
-            el.value = text;
-            el.setAttribute('readonly', '');
-            el.style.position = 'absolute';
-            el.style.left = '-9999px';
-            document.body.appendChild(el);
-            el.select();
-            document.execCommand('copy');
-            document.body.removeChild(el);
+        window.showSTK = function(person) {
+            const container = document.getElementById(`${person}-stk-container`);
+            const number = person === 'groom' ? '105873530265' : '080703080703';
+            const bank = person === 'groom' ? 'VietinBank' : 'MB Bank';
             
-            // Show toast
-            toast.style.opacity = '1';
-            toast.style.transform = 'translate(-50%, 0)';
-            
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translate(-50%, -20px)';
-            }, 3000);
-        };
+            container.innerHTML = `
+                <div class="font-mono font-bold text-lg cursor-pointer" onclick="copySTK('${number}')">
+                    ${number} <br/><span class="text-[10px] text-rose-400">${bank} - Click để copy</span>
+                </div>
+            `;
+        }
 
-        // --- RSVP Form Handling ---
-        const rsvpForm = document.getElementById('rsvp-form');
-        const rsvpSuccess = document.getElementById('rsvp-success');
-        const submitBtn = document.getElementById('submit-btn');
-        const submitText = document.getElementById('submit-text');
-
-        rsvpForm.addEventListener('submit', async (e) => {
+        // RSVP Form
+        document.getElementById('rsvp-form').addEventListener('submit', async (e) => {
             e.preventDefault();
+            const btn = document.getElementById('submit-btn');
+            const btnText = document.getElementById('btn-text');
+            const form = document.getElementById('rsvp-form');
+            const successDiv = document.getElementById('rsvp-success');
             
-            // UI Loading state
-            submitBtn.disabled = true;
-            submitBtn.classList.remove('bg-rose-800', 'hover:bg-rose-900');
-            submitBtn.classList.add('bg-stone-400');
-            submitText.innerText = 'ĐANG GỬI...';
+            btn.disabled = true;
+            btn.classList.replace('bg-rose-800', 'bg-stone-400');
+            btn.classList.replace('hover:bg-rose-900', 'hover:bg-stone-400');
+            btnText.innerText = 'ĐANG GỬI...';
 
             const formData = {
                 name: document.getElementById('rsvp-name').value,
@@ -532,18 +473,16 @@
                 });
                 
                 // Show Success
-                rsvpForm.classList.add('hidden');
-                rsvpSuccess.classList.remove('hidden');
-                rsvpSuccess.classList.add('flex');
+                form.style.display = 'none';
+                successDiv.style.display = 'flex';
+                
             } catch (error) { 
-                console.error("Lỗi gửi dữ liệu:", error);
-                alert("Có lỗi xảy ra khi gửi xác nhận. Bạn vui lòng thử lại nhé!");
-            } finally {
-                // Reset button state (in case of error or if needed)
-                submitBtn.disabled = false;
-                submitBtn.classList.add('bg-rose-800', 'hover:bg-rose-900');
-                submitBtn.classList.remove('bg-stone-400');
-                submitText.innerText = 'GỬI XÁC NHẬN';
+                console.error("Lỗi:", error);
+                alert("Có lỗi xảy ra. Bạn vui lòng thử lại nhé!");
+                btn.disabled = false;
+                btn.classList.replace('bg-stone-400', 'bg-rose-800');
+                btn.classList.replace('hover:bg-stone-400', 'hover:bg-rose-900');
+                btnText.innerText = 'GỬI XÁC NHẬN';
             }
         });
     </script>
