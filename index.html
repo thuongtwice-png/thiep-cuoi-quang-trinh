@@ -36,7 +36,7 @@
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; text-align: center; }
         .calendar-day { padding: 10px 0; font-size: 0.85rem; color: #57534e; }
         .calendar-header { font-weight: bold; color: #9f1239; border-bottom: 1px solid #fecdd3; margin-bottom: 10px; padding-bottom: 5px; }
-        .wedding-day { background: #9f1239; color: white !important; border-radius: 50%; position: relative; z-index: 1; }
+        .wedding-day { background: #9f1239; color: white !important; border-radius: 50%; position: relative; z-index: 1; font-weight: bold; }
         .wedding-day::after { content: '❤'; position: absolute; top: -10px; right: -5px; font-size: 10px; color: #fb7185; }
 
         #invitation-content { display: none; }
@@ -96,7 +96,7 @@
             </div>
         </section>
 
-        <!-- Countdown & Calendar Section -->
+        <!-- Countdown & Calendar Section (Đã thêm lại) -->
         <section class="py-20 px-4 bg-rose-50/50 reveal">
             <div class="max-w-5xl mx-auto text-center">
                 <h2 class="font-serif text-3xl text-rose-900 mb-4 uppercase tracking-widest">Đếm ngược ngày hạnh phúc</h2>
@@ -132,13 +132,13 @@
                         <div class="calendar-day calendar-header">T6</div>
                         <div class="calendar-day calendar-header">T7</div>
                         
-                        <!-- Empty slots for May 2026 starting Friday -->
+                        <!-- Lịch tháng 5/2026 bắt đầu từ thứ Sáu -->
                         <div class="calendar-day"></div><div class="calendar-day"></div><div class="calendar-day"></div><div class="calendar-day"></div><div class="calendar-day"></div>
                         <div class="calendar-day">1</div><div class="calendar-day">2</div>
                         <div class="calendar-day">3</div><div class="calendar-day">4</div><div class="calendar-day">5</div><div class="calendar-day">6</div><div class="calendar-day">7</div><div class="calendar-day">8</div><div class="calendar-day">9</div>
                         <div class="calendar-day">10</div><div class="calendar-day">11</div><div class="calendar-day">12</div><div class="calendar-day">13</div><div class="calendar-day">14</div><div class="calendar-day">15</div><div class="calendar-day">16</div>
                         <div class="calendar-day">17</div><div class="calendar-day">18</div><div class="calendar-day">19</div><div class="calendar-day">20</div><div class="calendar-day">21</div><div class="calendar-day">22</div><div class="calendar-day">23</div>
-                        <div class="calendar-day">24</div><div class="calendar-day">25</div><div class="calendar-day">26</div><div class="calendar-day wedding-day font-bold">27</div><div class="calendar-day">28</div><div class="calendar-day">29</div><div class="calendar-day">30</div>
+                        <div class="calendar-day">24</div><div class="calendar-day">25</div><div class="calendar-day">26</div><div class="calendar-day wedding-day">27</div><div class="calendar-day">28</div><div class="calendar-day">29</div><div class="calendar-day">30</div>
                         <div class="calendar-day">31</div>
                     </div>
                 </div>
@@ -150,27 +150,31 @@
             <h2 class="font-cursive text-5xl text-rose-800 mb-16 text-center">Sự kiện lễ cưới</h2>
             <div class="grid md:grid-cols-2 gap-10">
                 <div class="bg-white p-10 shadow-lg rounded-[2rem] border-l-8 border-rose-300">
-                    <h3 class="font-serif text-2xl mb-4 text-rose-900">Lễ Nạp Tài</h3>
-                    <p class="flex items-center gap-2 mb-1 text-stone-600"><i data-lucide="calendar" class="w-5 h-5"></i> 25/05/2026</p>
-                    <p class="text-xs italic text-rose-500 mb-2 ml-7">(Tức 09/04 Âm lịch)</p>
-                    <p class="flex items-center gap-2 mb-2 text-stone-600"><i data-lucide="clock" class="w-5 h-5"></i> 14:00 PM</p>
-                    <p class="flex items-center gap-2 mb-6 text-stone-600"><i data-lucide="map-pin" class="w-5 h-5"></i> Nhà Gái - phường Nghi Sơn</p>
-                    <a href="https://maps.app.goo.gl/r39hX2yLy1YgLnjC8" target="_blank" class="text-rose-600 font-bold underline">Xem bản đồ</a>
+                    <h3 class="font-serif text-2xl mb-4 text-rose-900 text-left">Lễ Nạp Tài</h3>
+                    <p class="flex items-center gap-2 mb-1 text-stone-600 text-left"><i data-lucide="calendar" class="w-5 h-5"></i> 25/05/2026</p>
+                    <p class="text-xs italic text-rose-500 mb-2 ml-7 text-left">(Tức 09/04 Âm lịch)</p>
+                    <p class="flex items-center gap-2 mb-2 text-stone-600 text-left"><i data-lucide="clock" class="w-5 h-5"></i> 14:00 PM</p>
+                    <p class="flex items-center gap-2 mb-6 text-stone-600 text-left"><i data-lucide="map-pin" class="w-5 h-5"></i> Nhà Gái - phường Nghi Sơn</p>
+                    <div class="text-left">
+                        <a href="https://maps.app.goo.gl/r39hX2yLy1YgLnjC8" target="_blank" class="text-rose-600 font-bold underline">Xem bản đồ</a>
+                    </div>
                 </div>
                 <div class="bg-white p-10 shadow-lg rounded-[2rem] border-l-8 border-rose-800">
-                    <h3 class="font-serif text-2xl mb-4 text-rose-900">Lễ Đón Dâu</h3>
-                    <p class="flex items-center gap-2 mb-1 text-stone-600"><i data-lucide="calendar" class="w-5 h-5"></i> 27/05/2026</p>
-                    <p class="text-xs italic text-rose-500 mb-2 ml-7">(Tức 11/04 Âm lịch)</p>
-                    <p class="flex items-center gap-2 mb-2 text-stone-600"><i data-lucide="clock" class="w-5 h-5"></i> 09:15 AM</p>
-                    <p class="flex items-center gap-2 mb-6 text-stone-600"><i data-lucide="map-pin" class="w-5 h-5"></i> Nhà Trai - phường Nghi Sơn</p>
-                    <a href="https://maps.app.goo.gl/r39hX2yLy1YgLnjC8" target="_blank" class="text-rose-800 font-bold underline">Xem bản đồ</a>
+                    <h3 class="font-serif text-2xl mb-4 text-rose-900 text-left">Lễ Đón Dâu</h3>
+                    <p class="flex items-center gap-2 mb-1 text-stone-600 text-left"><i data-lucide="calendar" class="w-5 h-5"></i> 27/05/2026</p>
+                    <p class="text-xs italic text-rose-500 mb-2 ml-7 text-left">(Tức 11/04 Âm lịch)</p>
+                    <p class="flex items-center gap-2 mb-2 text-stone-600 text-left"><i data-lucide="clock" class="w-5 h-5"></i> 09:15 AM</p>
+                    <p class="flex items-center gap-2 mb-6 text-stone-600 text-left"><i data-lucide="map-pin" class="w-5 h-5"></i> Nhà Trai - phường Nghi Sơn</p>
+                    <div class="text-left">
+                        <a href="https://maps.app.goo.gl/r39hX2yLy1YgLnjC8" target="_blank" class="text-rose-800 font-bold underline">Xem bản đồ</a>
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- RSVP Section -->
         <section class="py-24 px-4 max-w-3xl mx-auto text-center reveal">
-            <h2 class="font-cursive text-5xl text-rose-800 mb-6">Xác Nhận Tham Duy</h2>
+            <h2 class="font-cursive text-5xl text-rose-800 mb-6">Xác Nhận Tham Dự</h2>
             <div id="rsvp-container">
                 <form id="rsvp-form" class="bg-white p-8 md:p-12 rounded-[3rem] shadow-xl border border-rose-100 text-left space-y-6">
                     <div>
@@ -263,7 +267,6 @@
                 if (distance < 0) {
                     clearInterval(timer);
                     document.getElementById("days").innerText = "00";
-                    // Tùy chọn: Hiện thông báo "Đã đến ngày cưới!"
                 }
             }, 1000);
         }
