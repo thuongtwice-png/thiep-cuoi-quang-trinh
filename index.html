@@ -869,5 +869,50 @@
             animate();
         };
     </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const supabaseUrl = 'https://intcpncdirbsyhpptceg.supabase.co'
+
+const supabaseKey =
+'sb_publishable_x8F-uNOzFu7fEiC4TznFGA_JNaxkQU9'
+
+const supabase = window.supabase.createClient(
+    supabaseUrl,
+    supabaseKey
+)
+
+async function sendWish() {
+
+    const name =
+    document.getElementById("name").value
+
+    const message =
+    document.getElementById("message").value
+
+    if (!name || !message) {
+        alert("Vui lòng nhập đầy đủ")
+        return
+    }
+
+    const { error } = await supabase
+        .from('wishes')
+        .insert([
+            {
+                name: name,
+                message: message
+            }
+        ])
+
+    if (error) {
+        console.error(error)
+        alert("Gửi thất bại")
+    } else {
+        alert("Đã gửi lời chúc ❤️")
+
+        document.getElementById("name").value = ""
+        document.getElementById("message").value = ""
+    }
+}
+</script>
 </body>
 </html>
