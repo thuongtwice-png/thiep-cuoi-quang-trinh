@@ -987,9 +987,33 @@ const attendance =
         showToast('Có lỗi xảy ra');
     }
 });
+        <script>
+function openInvitation() {
+    const openingCard = document.getElementById("opening-card");
+    const mainContent = document.getElementById("main-content");
+
+    // Ẩn màn hình mở đầu
+    openingCard.classList.add("opacity-0");
+
+    setTimeout(() => {
+        openingCard.style.display = "none";
+
+        // Hiện nội dung thiệp
+        mainContent.classList.remove("hidden");
+
+        setTimeout(() => {
+            mainContent.classList.remove("opacity-0");
+        }, 100);
+    }, 800);
+
+    // Cho phép cuộn trang
+    document.body.style.overflow = "auto";
+}
+</script>
 
 // tự load khi mở web
 window.addEventListener('load', loadComments);
     </script>
+
 </body>
 </html>
