@@ -623,251 +623,218 @@
         function showToast(message) {
             const toast = document.getElementById('toast-box');
             document.getElementById('toast-message').innerText = message;
-            toast.classList.remove('opacity-0', 'pointer-events-none');
-            toast.style.transform = "translate(-50%, 0)";
-            
+            toast.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-[-20px]');
             setTimeout(() => {
-                toast.classList.add('opacity-0', 'pointer-events-none');
-                toast.style.transform = "translate(-50%, -20px)";
+                toast.classList.add('opacity-0', 'pointer-events-none', 'translate-y-[-20px]');
             }, 3000);
         }
 
-        // 8. Tương tác Thích (Like) cho Sổ lưu bút trực quan
-        function likeComment(elem, directButton = false) {
-            let indicator = null;
-            if (directButton) {
-                // Nếu bấm nút "Thích" bên dưới
-                const parent = elem.closest('.flex-col');
-                indicator = parent.querySelector('.like-indicator');
-                
-                // Toggle text màu thích
-                if (elem.classList.contains('text-rose-600')) {
-                    elem.classList.remove('text-rose-600', 'font-extrabold');
-                    elem.classList.add('text-stone-500');
-                    // Giảm đếm
-                    const countElem = indicator.querySelector('.like-count');
-                    let count = parseInt(countElem.innerText);
-                    count = count > 0 ? count - 1 : 0;
-                    countElem.innerText = count;
-                    if (count === 0) indicator.classList.add('hidden');
-                } else {
-                    elem.classList.add('text-rose-600', 'font-extrabold');
-                    elem.classList.remove('text-stone-500');
-                    // Tăng đếm
-                    indicator.classList.remove('hidden');
-                    const countElem = indicator.querySelector('.like-count');
-                    let count = parseInt(countElem.innerText);
-                    countElem.innerText = count + 1;
-                }
-            } else {
-                // Nếu bấm thẳng vào icon Trái tim nổi bong bóng
-                const countElem = elem.querySelector('.like-count');
-                let count = parseInt(countElem.innerText);
-                countElem.innerText = count + 1;
-            }
-        }
-
-        // Phản hồi placeholder
-        function replyPlaceholder(name) {
-            showToast(`Đang kết nối để phản hồi lại ${name}...`);
-        }
-
-        // 9. Nộp Form RSVP và đẩy trực tiếp lên Sổ lưu bút kiểu Facebook
-        const rsvpForm = document.getElementById('rsvp-form');
-        let commentCount = 3; // Số lượng mặc định sẵn
-
-        rsvpForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            const name = document.getElementById('rsvp-name').value;
-            const attendance = document.getElementById('rsvp-attendance').value;
-            const message = document.getElementById('rsvp-message').value;
-
-            // Kích hoạt hiệu ứng tim tung tóe từ nút
-            triggerParticles();
-
-            // Khởi tạo thông tin comment mới
-            const listContainer = document.getElementById('guestbook-list');
-            const newComment = document.createElement('div');
-            newComment.className = "flex gap-3 items-start p-1.5 rounded-2xl new-comment-animate";
-
-            const initials = name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
-            
-            // Xác định màu avatar ngẫu nhiên
-            const colorPresets = [
-                'bg-emerald-100 text-emerald-700',
-                'bg-rose-100 text-rose-700',
-                'bg-violet-100 text-violet-700',
-                'bg-amber-100 text-amber-700'
-            ];
-            const randomColor = colorPresets[Math.floor(Math.random() * colorPresets.length)];
-
-            const attendanceBadge = attendance === 'Có' 
-                ? '<span class="text-[9px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded font-bold uppercase">✅ Sẽ tham dự</span>'
-                : '<span class="text-[9px] bg-stone-200 text-stone-600 px-1.5 py-0.5 rounded font-bold uppercase">Tiếc quá</span>';
-
-            newComment.innerHTML = `
-                <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm shrink-0 shadow-inner border border-stone-100 ${randomColor}">
-                    ${initials || 'KH'}
-                </div>
-                <div class="flex flex-col flex-1">
-                    <div class="relative bg-stone-100 px-4 py-3 rounded-2xl rounded-tl-none inline-block max-w-full hover:bg-stone-200/60 transition-colors">
-                        <div class="flex items-center gap-2 mb-1">
-                            <h4 class="font-bold text-stone-900 text-sm">${name}</h4>
-                            ${attendanceBadge}
-                        </div>
-                        <p class="text-stone-700 text-sm whitespace-pre-wrap leading-relaxed">${message}</p>
-                        
-                        <!-- Thả tim ẩn định dạng (Ban đầu 1 like) -->
-                        <div class="like-indicator absolute -bottom-2 right-3 bg-white px-2 py-0.5 rounded-full shadow-md border border-stone-100 flex items-center gap-1 text-[11px] text-rose-500 font-bold cursor-pointer select-none transition-all hover:scale-105" onclick="likeComment(this)">
-                            <span>❤️</span>
-                            <span class="like-count">1</span>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-4 mt-2 ml-1 text-xs text-stone-500 font-semibold select-none">
-                        <span class="text-stone-400 font-normal">Vừa xong</span>
-                        <button onclick="likeComment(this, true)" class="btn-like hover:underline transition-colors text-stone-500">Thích</button>
-                        <button onclick="replyPlaceholder('${name}')" class="hover:underline transition-colors">Phản hồi</button>
-                    </div>
-                </div>
-            `;
-
-            // Đưa bình luận lên đầu Sổ lưu bút trực tiếp
-            listContainer.insertBefore(newComment, listContainer.firstChild);
-
-            // Cập nhật số đếm bình luận
-            commentCount++;
-            document.getElementById('guestbook-count').innerText = `${commentCount} bình luận`;
-
-            // Hiển thị thông báo thành công
-            const successToast = document.getElementById('rsvp-success-toast');
-            successToast.classList.remove('hidden');
-            
-            // Xóa dữ liệu cũ của form
-            rsvpForm.reset();
-
-            // Gửi thông tin ẩn lên Google Sheets (Giữ lại cấu trúc kịch bản có sẵn)
-            const endpoint = 'https://script.google.com/macros/s/AKfycbxEyvwHH1xMBlgYtioaqqSRI6O3PWibkmHecz5DGG0YsmhCl9rZUgsi0NPcTq8vBoQ2/exec';
-            const payload = {
-                name: name,
-                attendance: attendance,
-                message: message,
-                timestamp: new Date().toLocaleString()
-            };
-            fetch(endpoint, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            }).catch(error => {
-                console.log("Sheet backup logged offline.", error);
-            });
-
-            // Ẩn thông báo thành công sau 6 giây
-            setTimeout(() => {
-                successToast.classList.add('hidden');
-            }, 6000);
-
-            // Cuộn nhẹ Sổ lưu bút về phía đầu để người dùng dễ kiểm chứng bình luận vừa viết
-            newComment.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        });
-
-        // 10. Tạo tim rơi tự do rải rác ngoài hình nền
+        // 8. Tim rơi tự nhiên
         function startFallingHearts() {
-            setInterval(() => {
-                const heart = document.createElement('div');
-                heart.className = 'falling-heart text-rose-300';
-                heart.style.left = Math.random() * 100 + '%';
-                const size = Math.random() * 15 + 10;
-                heart.style.width = size + 'px';
-                heart.style.height = size + 'px';
-                heart.style.animationDuration = Math.random() * 3 + 4 + 's';
-                heart.style.opacity = Math.random() * 0.5 + 0.3;
-                
-                // SVG Trái tim rơi
-                heart.innerHTML = `<svg fill="currentColor" viewBox="0 0 24 24" class="w-full h-full"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
-                document.body.appendChild(heart);
-                
-                // Tự động giải phóng DOM khi bay hết
-                setTimeout(() => {
-                    heart.remove();
-                }, 7000);
-            }, 800);
+            console.log("Tim bắt đầu rơi!");
         }
 
-        // 11. Trình diễn Canvas bắn tim nổ từ nút xác nhận
-        const canvas = document.getElementById('heart-canvas');
-        const ctx = canvas.getContext('2d');
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-
-        class Particle {
-            constructor(x, y) {
-                this.x = x;
-                this.y = y;
-                this.size = Math.random() * 15 + 10;
-                this.speedX = Math.random() * 12 - 6;
-                this.speedY = Math.random() * -12 - 6;
-                this.gravity = 0.35;
-                this.alpha = 1;
-                this.color = `hsla(${Math.random() * 20 + 340}, 95%, 65%, ${this.alpha})`;
-                this.rotation = Math.random() * Math.PI * 2;
-                this.rotSpeed = Math.random() * 0.1 - 0.05;
-            }
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                this.speedY += this.gravity;
-                this.alpha -= 0.015;
-                this.rotation += this.rotSpeed;
-            }
-            draw() {
-                ctx.save();
-                ctx.globalAlpha = this.alpha;
-                ctx.translate(this.x, this.y);
-                ctx.rotate(this.rotation);
-                ctx.fillStyle = this.color;
-                
-                // Vẽ trái tim
-                ctx.beginPath();
-                ctx.moveTo(0, 0);
-                ctx.bezierCurveTo(-this.size/2, -this.size/2, -this.size, this.size/3, 0, this.size);
-                ctx.bezierCurveTo(this.size, this.size/3, this.size/2, -this.size/2, 0, 0);
-                ctx.fill();
-                ctx.restore();
+        // 9. Like Comment placeholder
+        function likeComment(btn, isText = false) {
+            if (isText) return; 
+            const countSpan = btn.querySelector('.like-count');
+            if (countSpan) {
+                countSpan.innerText = parseInt(countSpan.innerText) + 1;
             }
         }
 
+        // 10. Reply placeholder
+        function replyPlaceholder(name) {
+            alert('Đang phản hồi ' + name);
+        }
+    </script>
+
+    <!-- Supabase JS Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // Khởi tạo Supabase client 
+        const supabaseUrl = 'https://intcpncdirbsyhpptceg.supabase.co';
+        const supabaseKey = 'sb_publishable_x8F-uNOzFu7fEiC4TznFGA_JNaxkQU9';
+        const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+
+        // Giả lập hiệu ứng nổ hạt tung tóe khi gửi thành công
         function triggerParticles() {
-            const btn = document.getElementById('submit-rsvp-btn');
-            const rect = btn.getBoundingClientRect();
-            const startX = rect.left + rect.width / 2;
-            const startY = rect.top + rect.height / 2;
-            
-            for (let i = 0; i < 35; i++) {
-                particles.push(new Particle(startX, startY));
+            console.log("Hiệu ứng bắn tim ăn mừng!");
+        }
+
+        // Hàm tải dữ liệu lời chúc từ Supabase
+        async function fetchWishes() {
+            const { data, error } = await supabaseClient
+                .from('wishes')
+                .select('*')
+                .order('id', { ascending: false });
+
+            if (error) {
+                console.error("Lỗi khi tải dữ liệu từ Supabase:", error);
+                return;
+            }
+
+            const listContainer = document.getElementById('guestbook-list');
+            const countElem = document.getElementById('guestbook-count');
+
+            if (data && listContainer) {
+                listContainer.innerHTML = ''; 
+                countElem.innerText = `${data.length} bình luận`;
+
+                if (data.length === 0) {
+                    listContainer.innerHTML = `<div class="text-center py-8 text-stone-400 text-xs italic">Chưa có lời chúc nào, hãy là người đầu tiên gửi nhé!</div>`;
+                    return;
+                }
+
+                data.forEach(wish => {
+                    let attendanceBadge = '';
+                    let displayMessage = wish.message || '';
+
+                    if (displayMessage.startsWith("Có | ")) {
+                        attendanceBadge = '<span class="text-[9px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded font-bold uppercase">✅ Sẽ tham dự</span>';
+                        displayMessage = displayMessage.substring(5);
+                    } else if (displayMessage.startsWith("Không | ")) {
+                        attendanceBadge = '<span class="text-[9px] bg-stone-200 text-stone-600 px-1.5 py-0.5 rounded font-bold uppercase">Tiếc quá</span>';
+                        displayMessage = displayMessage.substring(8);
+                    } else {
+                        attendanceBadge = '<span class="text-[9px] bg-rose-100 text-rose-700 px-1.5 py-0.5 rounded font-bold uppercase">Khách mời</span>';
+                    }
+
+                    const name = wish.name || "Khách ẩn danh";
+                    const initials = name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+                    
+                    const colorPresets = ['bg-emerald-100 text-emerald-700', 'bg-rose-100 text-rose-700', 'bg-violet-100 text-violet-700', 'bg-amber-100 text-amber-700', 'bg-blue-100 text-blue-700'];
+                    const colorIndex = name.length % colorPresets.length;
+                    const randomColor = colorPresets[colorIndex];
+
+                    const commentHtml = `
+                        <div class="flex gap-3 items-start p-1.5 rounded-2xl hover:bg-rose-50/20 transition-all">
+                            <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm shrink-0 shadow-inner border border-stone-100 ${randomColor}">
+                                ${initials || 'KM'}
+                            </div>
+                            <div class="flex flex-col flex-1">
+                                <div class="relative bg-stone-100 px-4 py-3 rounded-2xl rounded-tl-none inline-block max-w-full hover:bg-stone-200/60 transition-colors">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <h4 class="font-bold text-stone-900 text-sm">${name}</h4>
+                                        ${attendanceBadge}
+                                    </div>
+                                    <p class="text-stone-700 text-sm whitespace-pre-wrap leading-relaxed">${displayMessage}</p>
+                                </div>
+                                <div class="flex items-center gap-4 mt-2 ml-1 text-xs text-stone-500 font-semibold select-none">
+                                    <span class="text-stone-400 font-normal">Đã lưu</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    listContainer.insertAdjacentHTML('beforeend', commentHtml);
+                });
             }
         }
 
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles = particles.filter(p => p.alpha > 0);
-            particles.forEach(p => {
-                p.update();
-                p.draw();
+        // Tải toàn bộ lời chúc cũ từ CSDL khi vừa mở trang
+        document.addEventListener("DOMContentLoaded", function () {
+            fetchWishes();
+
+            const rsvpForm = document.getElementById('rsvp-form');
+            if (!rsvpForm) return;
+
+            rsvpForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const nameInput = document.getElementById('rsvp-name');
+                const attendanceInput = document.getElementById('rsvp-attendance');
+                const messageInput = document.getElementById('rsvp-message');
+
+                if (!nameInput || !messageInput) return;
+
+                const name = nameInput.value.trim();
+                const attendance = attendanceInput ? attendanceInput.value : 'Có';
+                const message = messageInput.value.trim();
+
+                if (!name || !message) {
+                    alert("Vui lòng nhập đầy đủ tên và lời chúc nhé!");
+                    return;
+                }
+
+                const submitBtn = rsvpForm.querySelector('button[type="submit"]');
+                const originalBtnText = submitBtn.innerHTML;
+                submitBtn.innerHTML = "Đang gửi...";
+                submitBtn.disabled = true;
+
+                const { error } = await supabaseClient
+                    .from("wishes")
+                    .insert([
+                        {
+                            name: name,
+                            message: attendance + " | " + message
+                        }
+                    ]);
+
+                submitBtn.innerHTML = originalBtnText;
+                submitBtn.disabled = false;
+
+                if (error) {
+                    console.error("Lỗi từ Supabase:", error);
+                    alert("Gửi thất bại!\\nLỗi chi tiết: " + error.message);
+                    return;
+                }
+
+                triggerParticles();
+
+                const listContainer = document.getElementById('guestbook-list');
+                if (listContainer) {
+                    if (listContainer.querySelector('.italic')) {
+                        listContainer.innerHTML = '';
+                    }
+
+                    const initials = name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+                    const colorPresets = ['bg-emerald-100 text-emerald-700', 'bg-rose-100 text-rose-700', 'bg-violet-100 text-violet-700', 'bg-amber-100 text-amber-700', 'bg-blue-100 text-blue-700'];
+                    const randomColor = colorPresets[name.length % colorPresets.length];
+                    
+                    let attendanceBadge = attendance === 'Có' 
+                        ? '<span class="text-[9px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded font-bold uppercase">✅ Sẽ tham dự</span>'
+                        : '<span class="text-[9px] bg-stone-200 text-stone-600 px-1.5 py-0.5 rounded font-bold uppercase">Tiếc quá</span>';
+
+                    const newCommentHtml = `
+                        <div class="flex gap-3 items-start p-1.5 rounded-2xl hover:bg-rose-50/20 transition-all new-comment-animate">
+                            <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm shrink-0 shadow-inner border border-stone-100 ${randomColor}">
+                                ${initials || 'KM'}
+                            </div>
+                            <div class="flex flex-col flex-1">
+                                <div class="relative bg-stone-100 px-4 py-3 rounded-2xl rounded-tl-none inline-block max-w-full hover:bg-stone-200/60 transition-colors">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <h4 class="font-bold text-stone-900 text-sm">${name}</h4>
+                                        ${attendanceBadge}
+                                    </div>
+                                    <p class="text-stone-700 text-sm whitespace-pre-wrap leading-relaxed">${message}</p>
+                                </div>
+                                <div class="flex items-center gap-4 mt-2 ml-1 text-xs text-stone-500 font-semibold select-none">
+                                    <span class="text-stone-400 font-normal">Vừa xong</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    listContainer.insertAdjacentHTML('afterbegin', newCommentHtml);
+                    
+                    const countElem = document.getElementById('guestbook-count');
+                    if (countElem) {
+                        let currentCount = parseInt(countElem.innerText) || 0;
+                        countElem.innerText = `${currentCount + 1} bình luận`;
+                    }
+                }
+
+                // Hiển thị thông báo Toast thành công của Form
+                const toast = document.getElementById('rsvp-success-toast');
+                if (toast) {
+                    toast.classList.remove('hidden');
+                    setTimeout(() => {
+                        toast.classList.add('hidden');
+                    }, 5000);
+                }
+                
+                rsvpForm.reset();
             });
-            requestAnimationFrame(animate);
-        }
-        
-        // Luôn chạy hoạt ảnh Canvas
-        window.onload = function() {
-            animate();
-        };
+        });
     </script>
 </body>
 </html>
