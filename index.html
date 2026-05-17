@@ -868,26 +868,35 @@
         window.onload = function() {
             animate();
         };
-    </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
-const supabaseUrl = 'https://intcpncdirbsyhpptceg.supabase.co'
+const supabaseUrl =
+'https://intcpncdirbsyhpptceg.supabase.co'
 
 const supabaseKey =
 'sb_publishable_x8F-uNOzFu7fEiC4TznFGA_JNaxkQU9'
 
-const supabase = window.supabase.createClient(
+const supabase =
+window.supabase.createClient(
     supabaseUrl,
     supabaseKey
 )
 
-async function sendWish() {
+document
+.getElementById("rsvp-form")
+.addEventListener("submit", async function(e) {
+
+    e.preventDefault()
 
     const name =
-    document.getElementById("name").value
+    document.getElementById("rsvp-name").value
+
+    const attendance =
+    document.getElementById("rsvp-attendance").value
 
     const message =
-    document.getElementById("message").value
+    document.getElementById("rsvp-message").value
 
     if (!name || !message) {
         alert("Vui lòng nhập đầy đủ")
@@ -899,7 +908,8 @@ async function sendWish() {
         .insert([
             {
                 name: name,
-                message: message
+                message:
+                `${attendance} | ${message}`
             }
         ])
 
@@ -907,12 +917,18 @@ async function sendWish() {
         console.error(error)
         alert("Gửi thất bại")
     } else {
-        alert("Đã gửi lời chúc ❤️")
 
-        document.getElementById("name").value = ""
-        document.getElementById("message").value = ""
+        document
+        .getElementById("rsvp-success-toast")
+        .classList.remove("hidden")
+
+        document
+        .getElementById("rsvp-form")
+        .reset()
+
+        alert("Đã gửi lời chúc ❤️")
     }
-}
+})
 </script>
 </body>
 </html>
