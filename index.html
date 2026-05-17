@@ -996,14 +996,9 @@ function openInvitation() {
     const openingCard = document.getElementById("opening-card");
     const mainContent = document.getElementById("main-content");
 
-    if (openingCard) {
-        openingCard.style.display = "none";
-    }
-
-    if (mainContent) {
-        mainContent.classList.remove("hidden");
-        mainContent.classList.remove("opacity-0");
-    }
+    openingCard.style.display = "none";
+    mainContent.classList.remove("hidden");
+    mainContent.classList.remove("opacity-0");
 
     document.body.style.overflow = "auto";
 }
