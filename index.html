@@ -871,63 +871,71 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-const supabaseUrl =
-'https://intcpncdirbsyhpptceg.supabase.co'
+window.addEventListener("load", function () {
 
-const supabaseKey =
-'sb_publishable_x8F-uNOzFu7fEiC4TznFGA_JNaxkQU9'
+    const supabaseUrl =
+    'https://intcpncdirbsyhpptceg.supabase.co'
 
-const supabase =
-window.supabase.createClient(
-    supabaseUrl,
-    supabaseKey
-)
+    const supabaseKey =
+    'sb_publishable_x8F-uNOzFu7fEiC4TznFGA_JNaxkQU9'
 
-document
-.getElementById("rsvp-form")
-.addEventListener("submit", async function(e) {
+    const supabase =
+    window.supabase.createClient(
+        supabaseUrl,
+        supabaseKey
+    )
 
-    e.preventDefault()
+    const form =
+    document.getElementById("rsvp-form")
 
-    const name =
-    document.getElementById("rsvp-name").value
+    if (!form) return
 
-    const attendance =
-    document.getElementById("rsvp-attendance").value
+    form.addEventListener("submit", async function(e) {
 
-    const message =
-    document.getElementById("rsvp-message").value
+        e.preventDefault()
 
-    if (!name || !message) {
-        alert("Vui lòng nhập đầy đủ")
-        return
-    }
+        const name =
+        document.getElementById("rsvp-name")?.value
 
-    const { error } = await supabase
-        .from('wishes')
+        const attendance =
+        document.getElementById("rsvp-attendance")?.value
+
+        const message =
+        document.getElementById("rsvp-message")?.value
+
+        if (!name || !message) {
+            alert("Vui lòng nhập đầy đủ")
+            return
+        }
+
+        const { error } =
+        await supabase
+        .from("wishes")
         .insert([
             {
                 name: name,
                 message:
-                `${attendance} | ${message}`
+                attendance + " | " + message
             }
         ])
 
-    if (error) {
-        console.error(error)
-        alert("Gửi thất bại")
-    } else {
+        if (error) {
+            console.error(error)
+            alert("Gửi thất bại")
+        } else {
 
-        document
-        .getElementById("rsvp-success-toast")
-        .classList.remove("hidden")
+            const toast =
+            document.getElementById(
+                "rsvp-success-toast"
+            )
 
-        document
-        .getElementById("rsvp-form")
-        .reset()
+            if (toast) {
+                toast.classList.remove("hidden")
+            }
 
-        alert("Đã gửi lời chúc ❤️")
-    }
+            form.reset()
+        }
+    })
 })
 </script>
 </body>
