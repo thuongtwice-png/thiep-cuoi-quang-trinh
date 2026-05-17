@@ -991,5 +991,22 @@ const attendance =
 // tự load khi mở web
 window.addEventListener('load', loadComments);
 </script>
+<script>
+function openInvitation() {
+    const openingCard = document.getElementById("opening-card");
+    const mainContent = document.getElementById("main-content");
+
+    if (openingCard) {
+        openingCard.style.display = "none";
+    }
+
+    if (mainContent) {
+        mainContent.classList.remove("hidden");
+        mainContent.classList.remove("opacity-0");
+    }
+
+    document.body.style.overflow = "auto";
+}
+</script>
 </body>
 </html>
