@@ -869,5 +869,127 @@
             animate();
         };
     </script>
+const endpoint =
+'https://script.google.com/macros/s/AKfycbxEyvwHH1xMBlgYtioaqqSRI6O3PWibkmHecz5DGG0YsmhCl9rZUgsi0NPcTq8vBoQ2/exec';
+
+// Tạo HTML bình luận
+function createCommentHTML(data, isNew = false) {
+    const initials = data.name
+        .split(' ')
+        .map(n => n[0])
+        .join('')
+        .slice(0, 2)
+        .toUpperCase();
+
+    const attendanceBadge =
+        data.attendance === 'Có'
+        ? `<span class="text-[9px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded font-bold uppercase">✅ Sẽ tham dự</span>`
+        : `<span class="text-[9px] bg-stone-200 text-stone-600 px-1.5 py-0.5 rounded font-bold uppercase">Tiếc quá</span>`;
+
+    return `
+    <div class="flex gap-3 items-start p-1.5 rounded-2xl ${isNew ? 'new-comment-animate' : ''}">
+        <div class="w-10 h-10 rounded-full bg-rose-100 text-rose-700 flex items-center justify-center font-bold text-sm shrink-0 shadow-inner border border-stone-100">
+            ${initials}
+        </div>
+
+        <div class="flex flex-col flex-1">
+            <div class="relative bg-stone-100 px-4 py-3 rounded-2xl rounded-tl-none inline-block max-w-full">
+                <div class="flex items-center gap-2 mb-1">
+                    <h4 class="font-bold text-stone-900 text-sm">${data.name}</h4>
+                    ${attendanceBadge}
+                </div>
+
+                <p class="text-stone-700 text-sm whitespace-pre-wrap leading-relaxed">
+                    ${data.message}
+                </p>
+
+                <div class="like-indicator absolute -bottom-2 right-3 bg-white px-2 py-0.5 rounded-full shadow-md border border-stone-100 flex items-center gap-1 text-[11px] text-rose-500 font-bold cursor-pointer"
+                onclick="likeComment(this)">
+                    ❤️ <span class="like-count">0</span>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4 mt-2 ml-1 text-xs text-stone-500 font-semibold">
+                <span class="text-stone-400 font-normal">Vừa xong</span>
+                <button onclick="likeComment(this, true)" class="btn-like hover:underline">
+                    Thích
+                </button>
+            </div>
+        </div>
+    </div>
+    `;
+}
+
+// Load bình luận từ Google Sheet
+async function loadComments() {
+    try {
+        const response = await fetch(endpoint);
+        const data = await response.json();
+
+        const list = document.getElementById('guestbook-list');
+        list.innerHTML = '';
+
+        data.reverse().forEach(comment => {
+            list.innerHTML += createCommentHTML(comment);
+        });
+
+        document.getElementById('guestbook-count')
+            .innerText = `${data.length} bình luận`;
+
+    } catch (err) {
+        console.log('Lỗi load bình luận:', err);
+    }
+}
+
+// Gửi form
+rsvpForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const name =
+        document.getElementById('rsvp-name').value;
+const attendance =
+        document.getElementById('rsvp-attendance').value;
+
+    const message =
+        document.getElementById('rsvp-message').value;
+
+    const payload = {
+        name,
+        attendance,
+        message,
+        timestamp: new Date().toLocaleString()
+    };
+
+    try {
+        await fetch(endpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type':'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const list =
+            document.getElementById('guestbook-list');
+
+        list.insertAdjacentHTML(
+            'afterbegin',
+            createCommentHTML(payload, true)
+        );
+
+        loadComments();
+
+        rsvpForm.reset();
+
+        showToast('Gửi lời chúc thành công ❤️');
+
+    } catch (err) {
+        showToast('Có lỗi xảy ra');
+    }
+});
+
+// tự load khi mở web
+window.addEventListener('load', loadComments);
+</script>
 </body>
 </html>
